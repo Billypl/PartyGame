@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/pwa-test/static/css/main.323d7611.css",
-    "main.js": "/pwa-test/static/js/main.ac7c935a.js",
-    "static/js/453.5c464b4e.chunk.js": "/pwa-test/static/js/453.5c464b4e.chunk.js",
-    "service-worker.js": "/pwa-test/service-worker.js",
-    "index.html": "/pwa-test/index.html",
-    "main.323d7611.css.map": "/pwa-test/static/css/main.323d7611.css.map",
-    "main.ac7c935a.js.map": "/pwa-test/static/js/main.ac7c935a.js.map",
-    "453.5c464b4e.chunk.js.map": "/pwa-test/static/js/453.5c464b4e.chunk.js.map"
+    "main.css": "/PartyGame/static/css/main.323d7611.css",
+    "main.js": "/PartyGame/static/js/main.b7933bc6.js",
+    "static/js/453.5c464b4e.chunk.js": "/PartyGame/static/js/453.5c464b4e.chunk.js",
+    "service-worker.js": "/PartyGame/service-worker.js",
+    "index.html": "/PartyGame/index.html",
+    "main.323d7611.css.map": "/PartyGame/static/css/main.323d7611.css.map",
+    "main.b7933bc6.js.map": "/PartyGame/static/js/main.b7933bc6.js.map",
+    "453.5c464b4e.chunk.js.map": "/PartyGame/static/js/453.5c464b4e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.323d7611.css",
-    "static/js/main.ac7c935a.js"
+    "static/js/main.b7933bc6.js"
   ]
 }
