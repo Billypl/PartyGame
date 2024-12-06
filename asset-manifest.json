@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/PartyGame/static/css/main.37afc284.css",
-    "main.js": "/PartyGame/static/js/main.0dcbae05.js",
+    "main.js": "/PartyGame/static/js/main.38ed40eb.js",
     "static/js/453.5c464b4e.chunk.js": "/PartyGame/static/js/453.5c464b4e.chunk.js",
     "service-worker.js": "/PartyGame/service-worker.js",
     "index.html": "/PartyGame/index.html",
     "main.37afc284.css.map": "/PartyGame/static/css/main.37afc284.css.map",
-    "main.0dcbae05.js.map": "/PartyGame/static/js/main.0dcbae05.js.map",
+    "main.38ed40eb.js.map": "/PartyGame/static/js/main.38ed40eb.js.map",
     "453.5c464b4e.chunk.js.map": "/PartyGame/static/js/453.5c464b4e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.37afc284.css",
-    "static/js/main.0dcbae05.js"
+    "static/js/main.38ed40eb.js"
   ]
 }
