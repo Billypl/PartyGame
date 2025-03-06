@@ -6,32 +6,19 @@ using SortDirection = PartyGame.Models.ScoreboardModels.SortDirection;
 
 namespace PartyGame.Repositories
 {
-    public interface IScoreboardRepository
+    public interface IScoreboardRepository : IRepository<FinishedGame>
     {
-        void AddNewGame(FinishedGame newFinishedGame);
-        Task<List<FinishedGame>> GetAllGames();
         Task<List<FinishedGame>> GetGames(ScoreboardQuery scoreboardQuery);
     }
 
-    public class ScoreboardRepository : IScoreboardRepository
+    public class ScoreboardRepository :Repository<FinishedGame>,IScoreboardRepository
     {
 
-        private readonly GameDbContext _gameDbContext;
-
-        public ScoreboardRepository(GameDbContext gameDbContext)
+  
+        public ScoreboardRepository(GameDbContext gameDbContext):base(gameDbContext.Database, "GameResults")
         {
-            _gameDbContext = gameDbContext;
         }
 
-        public void AddNewGame(FinishedGame newFinishedGame)
-        {
-            _gameDbContext.GameResults.InsertOneAsync(newFinishedGame);
-        }
-
-        public async Task<List<FinishedGame>> GetAllGames()
-        {
-           return await _gameDbContext.GameResults.Find(FilterDefinition<FinishedGame>.Empty).ToListAsync();
-        }
         public async Task<List<FinishedGame>> GetGames(ScoreboardQuery scoreboardQuery)
         {
             var filterBuilder = Builders<FinishedGame>.Filter;
@@ -49,7 +36,7 @@ namespace PartyGame.Repositories
                 : Builders<FinishedGame>.Sort.Descending(r => r.FinalScore);
 
             // Paginacja
-            var pagedScores = await _gameDbContext.GameResults.Find(filter)
+            var pagedScores = await Collection.Find(filter)
                 .Sort(sortDirection)
                 .Skip((scoreboardQuery.PageNumber - 1) * scoreboardQuery.PageSize)
                 .Limit(scoreboardQuery.PageSize)

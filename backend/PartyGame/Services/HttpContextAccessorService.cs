@@ -2,6 +2,7 @@
 using PartyGame.Entities;
 using System;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 using PartyGame.Models.AccountModels;
 
 namespace PartyGame.Services
@@ -9,7 +10,9 @@ namespace PartyGame.Services
     public interface IHttpContextAccessorService
     {
         string GetTokenFromHeader();
-        AccountDetailsFromTokenDto GetProfileInformation();
+        AccountDetailsFromTokenDto GetAuthenticatedUserProfile();
+        bool IsUserLoggedIn();
+        bool IsTokenExist();
     }
 
     public class HttpContextAccessorService : IHttpContextAccessorService
@@ -40,7 +43,7 @@ namespace PartyGame.Services
             return token;
         }
 
-        public AccountDetailsFromTokenDto GetProfileInformation()
+        public AccountDetailsFromTokenDto GetAuthenticatedUserProfile()
         {
             var user = _httpContextAccessor.HttpContext?.User;
 
@@ -62,6 +65,32 @@ namespace PartyGame.Services
                 Nickname = nickname ?? throw new KeyNotFoundException("Nickname not found in claims.")
             };
         }
+
+        public bool IsUserLoggedIn()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null || !user.Identity?.IsAuthenticated == true)
+            {
+                return false;
+            }
+
+            var role = user.FindFirst(ClaimTypes.Role)?.Value;
+            return !string.IsNullOrEmpty(role); 
+        }
+
+        public bool IsTokenExist()
+        {
+            var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
+
+            if (authorizationHeader.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }
 

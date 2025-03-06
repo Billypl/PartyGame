@@ -1,0 +1,80 @@
+.form_container {
+  margin-top: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: auto;
+}
+.form_container .form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.form_container .form div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 14rem;
+  margin-top: 5px;
+}
+.form_container .form div input {
+  border-radius: 5px;
+  border-color: #1f1f1f;
+  border-style: solid;
+  border-width: 1px;
+  padding: 3px 5px 3px 5px;
+  margin-top: 2px;
+}
+.form_container .form .hint {
+  font-size: 0.7rem;
+  margin-top: 2px;
+  margin-bottom: 5px;
+  color: #929292;
+}
+.form_container .form .error {
+  font-size: 0.9rem;
+  color: #c10a27;
+  margin-top: 5px;
+  margin-bottom: -5px;
+  white-space: pre-wrap;
+  text-align: center;
+}
+.form_container .form button {
+  cursor: pointer;
+  background-color: #003865;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  width: 14rem;
+  margin-top: 15px;
+  padding: 7px 0 7px 0;
+  font-size: 1rem;
+}
+.form_container .form button:hover {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+}
+.form_container .link {
+  cursor: pointer;
+}
+.form_container .link:hover {
+  text-decoration: underline;
+}/*# sourceMappingURL=AccountForm.module.css.map */

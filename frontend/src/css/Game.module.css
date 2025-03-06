@@ -1,0 +1,17 @@
+.image_container {
+  background-color: #bdbdbd;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 10vh;
+}
+.image_container img {
+  width: 100%;
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  height: 50vh;
+}/*# sourceMappingURL=Game.module.css.map */

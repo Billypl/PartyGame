@@ -1,63 +1,31 @@
 ﻿using AutoMapper;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PartyGame.Entities;
 
 namespace PartyGame.Repositories
 {
-    public interface IPlacesRepository
+    public interface IPlacesRepository:IRepository<Place>
     {
-        Task<Place> GetPlaceById(int id);
-        Task<List<Place>> GetAllPlaces();
-        void AddNewPlace(Place newPlace);
         Task<long> GetPlacesCount();
-        Task<Place> GetPlaceByIndex(int index);
         Task<List<Place>> GetPlacesByDifficulty(DifficultyLevel difficultyLevel);
     }
 
-    public class PlacesRepository : IPlacesRepository
+    public class PlacesRepository : Repository<Place>,IPlacesRepository
     {
-        private readonly GameDbContext _gameDbContext;
-
-
-        public PlacesRepository(GameDbContext gameDbContext, IMapper mapper)
+        
+        public PlacesRepository(GameDbContext gameDbContext) :base(gameDbContext.Database,"Places")
         {
-            _gameDbContext = gameDbContext;
+           
         }
-
-        public async Task<Place> GetPlaceById(int id)
-        {
-            return await _gameDbContext.Places
-                .Find(p => p.Id == id)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Place>> GetAllPlaces()
-        {
-            return await _gameDbContext.Places.Find(FilterDefinition<Place>.Empty).ToListAsync();
-        }
-
-        public async void AddNewPlace(Place newPlace)
-        {
-            await _gameDbContext.Places.InsertOneAsync(newPlace);
-        }
-
         public async Task<long> GetPlacesCount()
         {
-            return await _gameDbContext.Places.CountDocumentsAsync(FilterDefinition<Place>.Empty);
-        }
-
-        public async Task<Place> GetPlaceByIndex(int index)
-        {
-            return await _gameDbContext.Places
-                .Find(_ => true)
-                .Skip(index)
-                .Limit(1)
-                .FirstOrDefaultAsync();
+            return await Collection.CountDocumentsAsync(FilterDefinition<Place>.Empty);
         }
 
         public async Task<List<Place>> GetPlacesByDifficulty(DifficultyLevel difficultyLevel)
         {
-            return await _gameDbContext.Places
+            return await Collection
                 .Find(p => p.DifficultyLevel == difficultyLevel)
                 .ToListAsync();
         }

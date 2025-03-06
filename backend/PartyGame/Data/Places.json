@@ -1,6 +1,5 @@
 [
   {
-    "Id": 1,
     "Name": "Wydzia� Elektroniki, Telekomunikacji i Informatyki",
     "Description": "Wydzia� Elektroniki, Telekomunikacji i Informatyki (ETI) Politechniki Gda�skiej (PG) jest jednym z czo�owych wydzia��w uczelni, oferuj�cym kszta�cenie na kierunkach ",
     "Coordinates": {
@@ -12,7 +11,6 @@
     "DifficultyLevel": "easy"
   },
   {
-    "Id": 2,
     "Name": "Gmach G��wny",
     "Description": "Zabytkowy budynek w Gda�sku. Mie�ci si� we Wrzeszczu przy ul. Narutowicza 11/12. ",
     "Coordinates": {
@@ -25,7 +23,6 @@
 
   },
   {
-    "Id": 3,
     "Name": "Centrum Sportu Akademickiego",
     "Description": "Centralnym obiektem jest zbudowany w 1962 roku kompleks Akademickiego O�rodka Sportowego PG.",
     "Coordinates": {
@@ -37,7 +34,6 @@
     "DifficultyLevel": "easy"
   },
   {
-    "Id": 4,
     "Name": "Armata do chlania",
     "Description": "Miejsce Spirytystyczne, centrum spotkan PG.",
     "Coordinates": {
@@ -49,7 +45,6 @@
     "DifficultyLevel": "easy"
   },
   {
-    "Id": 5,
     "Name": "Bar Akademicki",
     "Description": "G��wne miejsce spo�ywania posi�k�w przez student�w.",
     "Coordinates": {

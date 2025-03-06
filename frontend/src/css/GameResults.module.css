@@ -1,0 +1,27 @@
+.result_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.result_container button {
+  cursor: pointer;
+  background-color: #003865;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  width: 12rem;
+  margin-top: 15px;
+  padding: 7px 0 7px 0;
+  font-size: 1rem;
+}
+.result_container button:hover {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+}/*# sourceMappingURL=GameResults.module.css.map */

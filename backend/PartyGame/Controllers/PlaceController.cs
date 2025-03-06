@@ -8,7 +8,6 @@ namespace PartyGame.Controllers
 {
     [Route("api/place")]
     [ApiController]
-    [Authorize(Roles = "Admin,Moderator")]
     public class PlaceController : ControllerBase
     {
         private readonly IPlaceService _placeService;
@@ -26,14 +25,13 @@ namespace PartyGame.Controllers
         }
 
         [HttpGet("{placeID}")]
-        public ActionResult GetPlace([FromRoute] int placeId)
+        public ActionResult GetPlace([FromRoute] string placeId)
         {
             Place place = _placeService.GetPlaceById(placeId).Result;
             return Ok(place);
         }
 
-        [AllowAnonymous]
-        [Authorize(Roles = "Admin,Moderator,User")]
+        
         [HttpPost("to_check")]
         public ActionResult AddNewPlaceToQueue([FromBody] NewPlaceDto newPlace)
         {
@@ -44,6 +42,14 @@ namespace PartyGame.Controllers
                     Message = "Place successfully added to db"
                 }
             );
+        }
+
+        [HttpGet("to_check")]
+        public ActionResult GetAllPlacesInQueue()
+        {
+            List<PlaceToCheckDto> placesToCheck = _placeService.GetAllPlacesInQueue().Result;
+
+            return Ok(placesToCheck);
         }
 
         [HttpPost]
@@ -75,11 +81,11 @@ namespace PartyGame.Controllers
         [HttpPost("to_check/approve")]
         public ActionResult AcceptPlaceToCheck([FromQuery] string placeId)
         {
-            _placeService.RejectPlace(placeId);
+            _placeService.AcceptPlace(placeId);
             return Ok(
                 new
                 {
-                    Message = "Place successfully rejected"
+                    Message = "Place successfully added to places"
                 }
             );
         }

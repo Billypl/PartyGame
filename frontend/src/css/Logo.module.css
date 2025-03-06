@@ -1,0 +1,14 @@
+.logo {
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: right;
+      -ms-flex-align: right;
+          align-items: right;
+  margin: 10px;
+}
+.logo img {
+  height: 3em;
+  width: 3em;
+}/*# sourceMappingURL=Logo.module.css.map */

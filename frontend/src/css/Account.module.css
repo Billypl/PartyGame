@@ -1,0 +1,31 @@
+.account {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-column-gap: 20px;
+     -moz-column-gap: 20px;
+          column-gap: 20px;
+}
+.account .nav_item {
+  cursor: pointer;
+  background-color: #003865;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  background-color: #003865;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  width: 8em;
+  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.account .nav_item:hover {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+}/*# sourceMappingURL=Account.module.css.map */

@@ -1,0 +1,15 @@
+.scoreboard {
+  text-align: center;
+  margin: 5rem;
+}
+
+.record {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #bdbdbd;
+}/*# sourceMappingURL=Scoreboard.module.css.map */

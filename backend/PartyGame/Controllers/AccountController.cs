@@ -19,7 +19,7 @@ namespace PartyGame.Controllers
         }
 
         [HttpPut("register")]
-        public IActionResult AddNewUser([FromBody] RegisterUserDto registerUserDto)
+        public async Task<IActionResult> AddNewUser([FromBody] RegisterUserDto registerUserDto)
         {
             _accountService.RegisterUser(registerUserDto,"User");
 
@@ -30,17 +30,19 @@ namespace PartyGame.Controllers
             );
         }
 
-
-       
-
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginUserDto loginUserDto)
+        public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
         {
-           string token = _accountService.Login(loginUserDto);
-
-           return Ok(token);
+            LoginResultDto tokens = await _accountService.Login(loginUserDto);
+            return Ok(tokens);
         }
 
-
+        [Authorize(Roles = "Admin,Moderator,User")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserData()
+        {
+            AccountDetailsDto accountDetailsDto =  await _accountService.GetAccountDetails();
+            return Ok(accountDetailsDto);
+        }
     }
 }

@@ -4,17 +4,17 @@ namespace PartyGame.Entities
 {
     public class GameDbContext
     {
-        private readonly IMongoDatabase _database;
+        public IMongoDatabase Database { get; }
 
         public GameDbContext(IMongoClient mongoClient)
         {
-            _database = mongoClient.GetDatabase("PartyGame"); 
+            Database = mongoClient.GetDatabase("PartyGame");
 
-            var collection = _database.GetCollection<GameSession>("GameSessions");
+            var collection = Database.GetCollection<GameSession>("GameSessions");
 
             var indexOptions = new CreateIndexOptions
             {
-                ExpireAfter = TimeSpan.Zero 
+                ExpireAfter = TimeSpan.Zero
             };
 
             var indexKeys = Builders<GameSession>.IndexKeys.Ascending(x => x.ExpirationDate);
@@ -24,10 +24,10 @@ namespace PartyGame.Entities
 
         }
 
-        public IMongoCollection<Place> Places => _database.GetCollection<Place>("Places");
-        public IMongoCollection<PlaceToCheck> PlacesToCheck => _database.GetCollection<PlaceToCheck>("PlacesToCheckRepository");
-        public IMongoCollection<GameSession> GameSessions => _database.GetCollection<GameSession>("GameSessions");
-        public IMongoCollection<FinishedGame> GameResults => _database.GetCollection<FinishedGame>("GameResults");
-        public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+        public IMongoCollection<Place> Places => Database.GetCollection<Place>("Places");
+        public IMongoCollection<PlaceToCheck> PlacesToCheck => Database.GetCollection<PlaceToCheck>("PlacesToCheck");
+        public IMongoCollection<GameSession> GameSessions => Database.GetCollection<GameSession>("GameSessions");
+        public IMongoCollection<FinishedGame> GameResults => Database.GetCollection<FinishedGame>("GameResults");
+        public IMongoCollection<User> Users => Database.GetCollection<User>("Users");
     }
 }

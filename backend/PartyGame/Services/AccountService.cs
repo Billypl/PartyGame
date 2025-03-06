@@ -14,7 +14,9 @@ namespace PartyGame.Services
     public interface IAccountService
     {
         void RegisterUser(RegisterUserDto registerUserDto, string Role); 
-        string Login(LoginUserDto loginUserDto);
+        Task<LoginResultDto> Login(LoginUserDto loginUserDto);
+        Task<AccountDetailsDto> GetAccountDetails();
+        string RefreshSession();
 
     }
 
@@ -25,32 +27,39 @@ namespace PartyGame.Services
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IAccountTokenService _accountTokenService;
 
         public AccountService(IAccountRepository accountRepository, IPasswordHasher<User> passwordHasher,
             IHttpContextAccessorService contextAccessorService, IMapper mapper,
-            IOptions<AuthenticationSettings> authenticationSettings)
+            IOptions<AuthenticationSettings> authenticationSettings,
+            IAccountTokenService accountTokenService)
         {
             _accountRepository =accountRepository;
             _contextAccessorService = contextAccessorService;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings.Value;
-
+            _accountTokenService = accountTokenService;
         }
-
-
-        public void RegisterUser(RegisterUserDto registerUserDto,string Role)
+        public async void RegisterUser(RegisterUserDto registerUserDto,string role)
         {
-            if (_accountRepository.GetUserByNicknameOrEmailAsync(registerUserDto.Nickname).Result is not null)
+            if (await _accountRepository.GetUserByNicknameOrEmailAsync(registerUserDto.Nickname) is not null)
             {
                 throw new BadHttpRequestException("Nickname is already used");
             }
+
+
+            if (await _accountRepository.GetUserByNicknameOrEmailAsync(registerUserDto.Email) is not null)
+            {
+                throw new BadHttpRequestException("Email is already used");
+            }
+
             var newUser = new User()
             {
                 Email = registerUserDto.Email,
                 Nickname = registerUserDto.Nickname,
                 CreatedAt = DateTime.Now,
-                Role = Role,
+                Role = role,
 
             };
 
@@ -58,12 +67,12 @@ namespace PartyGame.Services
             newUser.PasswordHash = passwordHash;
 
 
-            _accountRepository.AddNewUser(newUser);
+            _accountRepository.CreateAsync(newUser);
         }
 
-        public string Login(LoginUserDto loginUserDto)
+        public async Task<LoginResultDto> Login(LoginUserDto loginUserDto)
         {
-            var user = _accountRepository.GetUserByNicknameOrEmailAsync(loginUserDto.NicknameOrEmail).Result;
+            var user = await _accountRepository.GetUserByNicknameOrEmailAsync(loginUserDto.NicknameOrEmail);
 
             if (user is null)
             {
@@ -74,34 +83,33 @@ namespace PartyGame.Services
 
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new KeyNotFoundException("Invalid username or password");
+                throw new KeyNotFoundException("Invalid nickname or password");
             }
 
-            var claims = new List<Claim>()
+            string token = _accountTokenService.GenerateAccountToken(user);
+            string refreshToken = _accountTokenService.GenerateRefreshToken(user);
+
+            return new LoginResultDto
             {
-                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                new Claim(ClaimTypes.Email,$"{user.Email}"),
-                new Claim(ClaimTypes.Role,$"{user.Role}"),
-                new Claim(ClaimTypes.Name, $"{user.Nickname}")
+                Token = token,
+                RefreshToken = refreshToken
             };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireAccount);
-
-            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
-                _authenticationSettings.JwtIssuer,
-                claims,
-                expires: expires,
-                signingCredentials: cred
-            );
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            return tokenHandler.WriteToken(token);
-
         }
 
+        public async Task<AccountDetailsDto> GetAccountDetails()
+        {
+            AccountDetailsFromTokenDto tokenData = _contextAccessorService.GetAuthenticatedUserProfile();
 
+            User account = await _accountRepository.GetAsync(tokenData.UserId);
+
+            AccountDetailsDto accountDetailsDto = _mapper.Map<AccountDetailsDto>(account);
+
+            return accountDetailsDto;
+        }
+
+        public string RefreshSession()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

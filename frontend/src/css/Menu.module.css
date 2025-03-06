@@ -1,0 +1,43 @@
+.main_menu {
+  height: 100vh;
+  width: 100vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  row-gap: 20px;
+}
+.main_menu .menu_option {
+  cursor: pointer;
+  background-color: #003865;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  font-size: 1.5em;
+  padding: 10px;
+  background-color: #003865;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  width: 12em;
+  max-width: 90vw;
+  text-align: center;
+}
+.main_menu .menu_option:hover {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+}
+.main_menu .menu_option:hover {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+}/*# sourceMappingURL=Menu.module.css.map */

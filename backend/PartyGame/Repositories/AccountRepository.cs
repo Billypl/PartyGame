@@ -1,39 +1,28 @@
 ﻿using AutoMapper;
+using Microsoft.Identity.Client;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PartyGame.Entities;
 
 namespace PartyGame.Repositories
 {
-    public interface IAccountRepository
+    public interface IAccountRepository : IRepository<User>
     {
-        void AddNewUser(User newUser);
-        void DeleteUser(User existingUser);
+
         void AddNewUsers(IEnumerable<User> newUsers);
         Task<User> GetUserByNicknameOrEmailAsync(string nicknameOrEmail);
     }
 
-    public class AccountRepository : IAccountRepository
+    public class AccountRepository :Repository<User>,IAccountRepository
     {
-        private readonly GameDbContext _gameDbContext;
-
-        public AccountRepository(GameDbContext gameDbContext, IMapper mapper)
+        public AccountRepository(GameDbContext gameDbContext):base(gameDbContext.Database,"Users")
         {
-            _gameDbContext = gameDbContext;
+
         }
 
-        public async void AddNewUser(User newUser)
-        {
-            await _gameDbContext.Users.InsertOneAsync(newUser);
-        }
-
-        public async void DeleteUser(User existingUser)
-        {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, existingUser.Id);
-            _ = await _gameDbContext.Users.DeleteOneAsync(filter);
-        }
         public async void AddNewUsers(IEnumerable<User> newUsers)
         {
-            await _gameDbContext.Users.InsertManyAsync(newUsers);
+            await Collection.InsertManyAsync(newUsers);
         }
 
         public async Task<User> GetUserByNicknameOrEmailAsync(string nicknameOrEmail)
@@ -43,9 +32,7 @@ namespace PartyGame.Repositories
                 Builders<User>.Filter.Eq(u => u.Email, nicknameOrEmail)
             );
 
-            return await _gameDbContext.Users.Find(filter).FirstOrDefaultAsync();
+            return await Collection.Find(filter).FirstOrDefaultAsync();
         }
-
-
     }
 }

@@ -7,10 +7,14 @@ namespace PartyGame.Services
 {
     public interface IGameSessionService
     {
-        Task<GameSession> GetSessionByToken();
-        void DeleteSessionByToken();
-        void UpdateGameSession(GameSession session);
-        void AddNewGameSession(GameSession session);
+        Task DeleteSessionByToken(string token);
+        Task DeleteSessionByHeader();
+        Task<GameSession> GetSessionByToken(string token);
+        Task<GameSession> GetSessionByHeader();
+        Task UpdateGameSession(GameSession session);
+        Task<bool> HasActiveGameSession(string token);
+        Task AddNewGameSession(GameSession session);
+
     }
 
     public class GameSessionService : IGameSessionService
@@ -18,27 +22,15 @@ namespace PartyGame.Services
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly IHttpContextAccessorService _httpContextAccessorService;
 
-        public GameSessionService(IGameSessionRepository gameSessionRepository, IHttpContextAccessorService httpContextAccessorService)
+        public GameSessionService(IGameSessionRepository gameSessionRepository,IHttpContextAccessorService httpContextAccessorService)
         {
             _gameSessionRepository = gameSessionRepository;
             _httpContextAccessorService = httpContextAccessorService;
         }
 
-        public async Task<GameSession> GetSessionByToken()
-        {
-            string token = _httpContextAccessorService.GetTokenFromHeader();
-            GameSession gameSession = await _gameSessionRepository.GetGameSessionByToken(token);
-            if (gameSession == null)
-            {
-                throw new KeyNotFoundException($"GameSession with token {token} was not found.");
-            }
 
-            return gameSession;
-        }
-
-        public async void DeleteSessionByToken()
+        public async Task DeleteSessionByToken(string token)
         {
-            string token = _httpContextAccessorService.GetTokenFromHeader();
             DeleteResult deleteResult = await _gameSessionRepository.DeleteSessionByToken(token);
             if (deleteResult.DeletedCount == 0)
             {
@@ -46,23 +38,73 @@ namespace PartyGame.Services
             }
         }
 
-        public async void UpdateGameSession(GameSession session)
+        public async Task DeleteSessionByHeader()
         {
-            UpdateResult updateResult = await _gameSessionRepository.UpdateGameSession(session);
-            if (updateResult.MatchedCount == 0)
+            string token = _httpContextAccessorService.GetTokenFromHeader();
+
+            DeleteResult deleteResult = await _gameSessionRepository.DeleteSessionByToken(token);
+            if (deleteResult.DeletedCount == 0)
             {
-                throw new KeyNotFoundException($"GameSession with ID {session.Id} was not found.");
+                throw new KeyNotFoundException($"GameSession with token {token} was not found.");
             }
         }
 
-        public void AddNewGameSession(GameSession session)
+        public async Task<GameSession> GetSessionByToken(string token)
         {
-            GameSession existedSession = _gameSessionRepository.GetGameSessionByToken(session.Token).Result;
+            GameSession gameSession = await _gameSessionRepository.GetGameSessionByToken(token);
+
+            if (gameSession is null)
+            {
+                throw new KeyNotFoundException($"Game session with token {token} was not found");
+            }
+            return gameSession;
+        }
+
+        public async Task<GameSession> GetSessionByHeader()
+        {
+            string token =  _httpContextAccessorService.GetTokenFromHeader();
+
+            GameSession gameSession = await _gameSessionRepository.GetGameSessionByToken(token);
+
+            if (gameSession is null)
+            {
+                throw new KeyNotFoundException($"Game session with token {token} was not found");
+            }
+            return gameSession;
+        }
+
+        public async Task UpdateGameSession(GameSession session)
+        {
+            var existingSession = await _gameSessionRepository.GetAsync(session.Id);
+
+            if (existingSession == null)
+            {
+                throw new KeyNotFoundException($"GameSession with ID {session.Id} was not found.");
+            }
+
+            await _gameSessionRepository.UpdateAsync(session);
+        }
+
+        public async Task<bool> HasActiveGameSession(string token)
+        {
+            var existingSession = await _gameSessionRepository.GetGameSessionByToken(token);
+
+            if (existingSession is null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task AddNewGameSession(GameSession session)
+        {
+            GameSession existedSession = await _gameSessionRepository.GetGameSessionByToken(session.Token);
             if (existedSession != null)
             {
                 throw new InvalidOperationException("A session with the same token already exists.");
             }
-            _gameSessionRepository.AddNewGameSession(session);
+            await _gameSessionRepository.CreateAsync(session);
         }
 
 

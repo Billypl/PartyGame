@@ -7,7 +7,7 @@ using System.Data;
 using PartyGame.Models.AccountModels;
 using PartyGame.Services;
 
-namespace PartyGame
+namespace PartyGame.Extensions
 {
     public class Seeder
     {
@@ -24,6 +24,8 @@ namespace PartyGame
 
         public async Task Seed()
         {
+            await _gameDbContext.Places.DeleteManyAsync(Builders<Place>.Filter.Empty);
+
             var placeCount = await _gameDbContext.Places.CountDocumentsAsync(Builders<Place>.Filter.Empty);
 
             if (placeCount == 0)
@@ -40,43 +42,43 @@ namespace PartyGame
                 AddUsers();
             }
         }
-     
+
 
         private void AddUsers()
         {
 
-           var admin = new RegisterUserDto
+            var admin = new RegisterUserDto
             {
                 Nickname = "Admin",
                 Password = "AdminAdmin",
                 ConfirmPassword = "AdminAdmin",
                 Email = "Admin@Admin.com",
             };
-           
-           _accountService.RegisterUser(admin,"Admin");
 
-           var moderator = new RegisterUserDto
-           {
-               Nickname = "Moderator",
-               Password = "ModeratorModerator",
-               ConfirmPassword = "ModeratorModerator",
-               Email = "Moderator@Moderator.com"
-           };
+            _accountService.RegisterUser(admin, "Admin");
 
-           _accountService.RegisterUser(moderator, "Moderator");
+            var moderator = new RegisterUserDto
+            {
+                Nickname = "Moderator",
+                Password = "ModeratorModerator",
+                ConfirmPassword = "ModeratorModerator",
+                Email = "Moderator@Moderator.com"
+            };
 
-           var user = new RegisterUserDto
-           {
-               Nickname = "User",
-               Password = "UserUser",
-               ConfirmPassword = "UserUser",
-               Email = "User@User.com"
-           };
-           _accountService.RegisterUser(user, "User");
+            _accountService.RegisterUser(moderator, "Moderator");
+
+            var user = new RegisterUserDto
+            {
+                Nickname = "User",
+                Password = "UserUser",
+                ConfirmPassword = "UserUser",
+                Email = "User@User.com"
+            };
+            _accountService.RegisterUser(user, "User");
         }
-       
 
         private IEnumerable<Place>? GetPlaces()
+
         {
             string jsonString = File.ReadAllText(_filePath);
 
